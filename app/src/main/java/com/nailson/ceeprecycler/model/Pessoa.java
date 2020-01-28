@@ -1,6 +1,8 @@
 package com.nailson.ceeprecycler.model;
 
-public class Pessoa {
+import java.io.Serializable;
+
+public class Pessoa implements Serializable {
 
 
     public static final String TABELA_PESSOAS = "PESSOAS";

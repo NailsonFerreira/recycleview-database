@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nailson.ceeprecycler.R;
+import com.nailson.ceeprecycler.dao.PessoaDAO;
 import com.nailson.ceeprecycler.model.Pessoa;
 
 import java.util.List;
@@ -17,10 +18,12 @@ public class ListaNotasAdapter extends RecyclerView.Adapter <ListaNotasAdapter.N
 
     private List<Pessoa> pessoas;
     private Context context;
+    private PessoaDAO dao;
 
     public ListaNotasAdapter(List<Pessoa> pessoas, Context context) {
         this.pessoas = pessoas;
         this.context = context;
+        dao = new PessoaDAO(context);
     }
 
     @NonNull
@@ -42,12 +45,12 @@ public class ListaNotasAdapter extends RecyclerView.Adapter <ListaNotasAdapter.N
 
     }
 
+
     // Retorna o tamanho da lista
     @Override
     public int getItemCount() {
         return pessoas.size();
     }
-
 
 
     class NotaViewHolder extends RecyclerView.ViewHolder {
@@ -65,5 +68,10 @@ public class ListaNotasAdapter extends RecyclerView.Adapter <ListaNotasAdapter.N
             txtTitulo.setText(String.format("%s - ID: %d", pessoa.getNome(), pessoa.getId()));
             txtDescricao.setText(String.valueOf(pessoa.getIdade()));
         }
+    }
+
+    public void adicionaPessoa(Pessoa pessoa){
+        pessoas.add(pessoa);
+        notifyDataSetChanged();
     }
 }

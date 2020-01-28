@@ -1,4 +1,4 @@
-package interfaces;
+package com.nailson.ceeprecycler.interfaces;
 
 import android.content.ContentValues;
 import android.database.Cursor;

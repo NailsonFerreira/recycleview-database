@@ -13,7 +13,7 @@ import java.util.List;
 
 import static com.nailson.ceeprecycler.model.Contato.*;
 
-public class ContatoDAO extends BasicDAO implements interfaces.BasicDAO<Contato> {
+public class ContatoDAO extends BasicDAO implements com.nailson.ceeprecycler.interfaces.BasicDAO<Contato> {
 
     public static final String TAG = "ContatoDAO";
     private SQLiteDatabase db;

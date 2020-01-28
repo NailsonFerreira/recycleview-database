@@ -3,6 +3,7 @@ package com.nailson.ceeprecycler.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -16,7 +17,7 @@ import static com.nailson.ceeprecycler.model.Pessoa.IDADE;
 import static com.nailson.ceeprecycler.model.Pessoa.NOME;
 import static com.nailson.ceeprecycler.model.Pessoa.TABELA_PESSOAS;
 
-public class PessoaDAO extends BasicDAO implements interfaces.BasicDAO<Pessoa> {
+public class PessoaDAO extends BasicDAO implements com.nailson.ceeprecycler.interfaces.BasicDAO<Pessoa> {
 
 
     public static final String TAG = "PessoaDAO";
@@ -42,7 +43,7 @@ public class PessoaDAO extends BasicDAO implements interfaces.BasicDAO<Pessoa> {
 
 
     @Override
-    public long insere(Pessoa pessoa) {
+    public long insere(Pessoa pessoa)throws SQLiteConstraintException {
         db = getWritableDatabase();
         ContentValues values = getContentValues(pessoa);
         long insert = db.insert(TABELA_PESSOAS, null, values);

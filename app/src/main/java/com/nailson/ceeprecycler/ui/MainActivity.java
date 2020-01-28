@@ -2,6 +2,7 @@ package com.nailson.ceeprecycler.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +23,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private BasicDAO pessoaDAO;
+    private PessoaDAO pessoaDAO;
+    private List<Pessoa> pessoas;
+    private ListaNotasAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lista_notas);
         pessoaDAO = new PessoaDAO(this);
 
-        List<Pessoa> pessoas = pessoaDAO.selectAll();
+        pessoas = pessoaDAO.selectAll();
 
         configuraRecyclerView(pessoas);
 
@@ -39,9 +42,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, FormularioActivity.class);
-                startActivity(i);
+                startActivityForResult(i, 1);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        if(requestCode==1 && resultCode==2 && data.hasExtra(getResources().getString(R.string.extra_pessoa))){
+            Pessoa pessoa = (Pessoa) data.getSerializableExtra(getResources().getString(R.string.extra_pessoa));
+            pessoaDAO.insere(pessoa);
+            adapter.adicionaPessoa(pessoa);
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     private List<Nota> getNotasExemplo() {
@@ -55,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void configuraRecyclerView(List<Pessoa> pessoas) {
         RecyclerView listaNotas = findViewById(R.id.lista_notas_recycler_view);
-        listaNotas.setAdapter( new ListaNotasAdapter(pessoas, this));
+        adapter = new ListaNotasAdapter(pessoas, this);
+        listaNotas.setAdapter(adapter);
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         listaNotas.setLayoutManager(manager);
     }

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Ceep Recycler</string>
     <string name="inserir_uma_nota">Inserir uma nota</string>
+    <string name="extra_pessoa">pessoa</string>
 </resources>
