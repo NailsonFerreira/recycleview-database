@@ -14,13 +14,12 @@ import com.nailson.ceeprecycler.R;
 import com.nailson.ceeprecycler.dao.PessoaDAO;
 import com.nailson.ceeprecycler.model.Pessoa;
 
+import static com.nailson.ceeprecycler.interfaces.Constantes.RESULT_CODE_PESSOA;
+
 public class FormularioActivity extends AppCompatActivity {
 
     private EditText txtNome;
     private EditText txtIdade;
-    private PessoaDAO pessoaDAO;
-    private Button btnAdicionar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +43,7 @@ public class FormularioActivity extends AppCompatActivity {
     private void retornaResult(Pessoa pessoa) {
         Intent result = new Intent();
         result.putExtra(getResources().getString(R.string.extra_pessoa), pessoa);
-        setResult(2, result);
+        setResult(RESULT_CODE_PESSOA, result);
     }
 
     private Pessoa getPessoa() {
@@ -64,7 +63,6 @@ public class FormularioActivity extends AppCompatActivity {
         if(isMenuSalvar(item)){
             salvar();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -72,17 +70,8 @@ public class FormularioActivity extends AppCompatActivity {
         return item.getItemId()== R.id.menu_formulario_salva;
     }
 
-    private void irParaMain() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-
     private void initElements() {
-        pessoaDAO = new PessoaDAO(this);
         txtNome = findViewById(R.id.formulario_nome);
         txtIdade = findViewById(R.id.formulario_idade);
-        btnAdicionar = findViewById(R.id.button_adicionar);
     }
 }

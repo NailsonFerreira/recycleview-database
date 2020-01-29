@@ -8,18 +8,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nailson.ceeprecycler.R;
-import com.nailson.ceeprecycler.dao.BasicDAO;
-import com.nailson.ceeprecycler.dao.NotaDAO;
 import com.nailson.ceeprecycler.dao.PessoaDAO;
-import com.nailson.ceeprecycler.model.Nota;
 import com.nailson.ceeprecycler.model.Pessoa;
-import com.nailson.ceeprecycler.recyclerview.ListaNotasAdapter;
-import com.nailson.ceeprecycler.ui.FormularioActivity;
+import com.nailson.ceeprecycler.recyclerview.adapter.ListaNotasAdapter;
+import com.nailson.ceeprecycler.recyclerview.adapter.listener.OnItemClickListener;
 
-import java.util.Calendar;
 import java.util.List;
+
+import static com.nailson.ceeprecycler.interfaces.Constantes.REQUEST_CODE_PESSOA;
+import static com.nailson.ceeprecycler.interfaces.Constantes.RESULT_CODE_PESSOA;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, FormularioActivity.class);
-                startActivityForResult(i, 1);
+                startActivityForResult(i, REQUEST_CODE_PESSOA);
             }
         });
     }
@@ -50,34 +50,40 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-        if(requestCode==1 && resultCode==2 && data.hasExtra(getResources().getString(R.string.extra_pessoa))){
+        if(isRequestCode(requestCode) && isResultCode(resultCode) && data.hasExtra(getResources().getString(R.string.extra_pessoa))){
             Pessoa pessoa = (Pessoa) data.getSerializableExtra(getResources().getString(R.string.extra_pessoa));
-            pessoaDAO.insere(pessoa);
+            long insere = pessoaDAO.insere(pessoa);
+            pessoa.setId((int) insere);
             adapter.adicionaPessoa(pessoa);
         }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+    private boolean isResultCode(int resultCode) {
+        return resultCode==RESULT_CODE_PESSOA;
     }
 
-    private List<Nota> getNotasExemplo() {
-        NotaDAO dao = new NotaDAO();
-        Calendar calendar = Calendar.getInstance();
-        for (int i = 1; i<1000; i++) {
-            dao.insere(new Nota("Titulo "+i, calendar.getTime().toString()));
-        }
-        return dao.todos();
+    private boolean isRequestCode(int requestCode) {
+        return requestCode==REQUEST_CODE_PESSOA;
     }
 
     private void configuraRecyclerView(List<Pessoa> pessoas) {
         RecyclerView listaNotas = findViewById(R.id.lista_notas_recycler_view);
+        configuraAdapter(pessoas, listaNotas);
+    }
+
+    private void configuraAdapter(List<Pessoa> pessoas, RecyclerView listaNotas) {
         adapter = new ListaNotasAdapter(pessoas, this);
         listaNotas.setAdapter(adapter);
+        //Listener criado manualmente
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick() {
+                Toast.makeText(MainActivity.this, "Teste", Toast.LENGTH_SHORT).show();
+
+            }
+        });
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         listaNotas.setLayoutManager(manager);
     }
