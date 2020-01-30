@@ -67,7 +67,7 @@ public class PessoaDAO extends BasicDAO implements com.nailson.ceeprecycler.inte
     @Override
     public boolean existe(Pessoa pessoa) {
         db = getReadableDatabase();
-        String existe = String.format("SELECT * %s FROM %s WHERE %s = ? LIMIT 1;", ID, TABELA_PESSOAS, ID);
+        String existe = String.format("SELECT * FROM %s WHERE %s = ? LIMIT 1;", TABELA_PESSOAS, ID);
 
         Cursor c = db.rawQuery(existe, new String[]{String.valueOf(pessoa.getId())});
         int quantidade = c.getCount();
@@ -84,6 +84,15 @@ public class PessoaDAO extends BasicDAO implements com.nailson.ceeprecycler.inte
         String[] args = new String[]{String.valueOf(pessoa.getId())};
         int delete = db.delete(TABELA_PESSOAS, where, args);
         Log.i(TAG, String.format("delete():%s db: %s", pessoa.toString(), delete));
+        return delete;
+    }
+
+    public int deteta(int idPessoa) {
+        db = getWritableDatabase();
+        String where = ID + " = ?";
+        String[] args = new String[]{String.valueOf(idPessoa)};
+        int delete = db.delete(TABELA_PESSOAS, where, args);
+        Log.i(TAG, String.format("delete():%s db: %s", idPessoa, delete));
         return delete;
     }
 

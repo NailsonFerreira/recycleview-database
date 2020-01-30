@@ -62,6 +62,7 @@ public class ListaNotasAdapter extends RecyclerView.Adapter <ListaNotasAdapter.N
 
         private final TextView txtTitulo;
         private final TextView txtDescricao;
+        private Pessoa pessoa;
 
         public NotaViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -71,19 +72,30 @@ public class ListaNotasAdapter extends RecyclerView.Adapter <ListaNotasAdapter.N
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onItemClickListener.onItemClick();
+                    onItemClickListener.onItemClick(pessoa, getAdapterPosition());
                 }
             });
         }
 
         public void vincula(Pessoa pessoa) {
+            this.pessoa = pessoa;
             txtTitulo.setText(String.format("%s - ID: %d", pessoa.getNome(), pessoa.getId()));
             txtDescricao.setText(String.valueOf(pessoa.getIdade()));
         }
     }
 
+    public void altera(Pessoa pessoa, int posicao){
+        pessoas.set(posicao, pessoa);
+        notifyDataSetChanged();
+    }
+
     public void adicionaPessoa(Pessoa pessoa){
         pessoas.add(pessoa);
+        notifyDataSetChanged();
+    }
+
+    public void remove(int position) {
+        pessoas.remove(position);
         notifyDataSetChanged();
     }
 }
