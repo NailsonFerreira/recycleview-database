@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
 
 import com.nailson.ceeprecycler.dao.PessoaDAO;
 import com.nailson.ceeprecycler.recyclerview.adapter.ListaNotasAdapter;
@@ -25,13 +26,22 @@ public class PessoaTouchHelperCallBack extends ItemTouchHelper.Callback {
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         int marcadorDeslize = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-        return makeMovementFlags(0, marcadorDeslize);
+        int marcadorArrastar = ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+
+        return makeMovementFlags(marcadorArrastar, marcadorDeslize);
     }
 
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+        int positionIni = viewHolder.getAdapterPosition();
+        int positionFim = viewHolder1.getAdapterPosition();
+        new PessoaDAO(context).troca(positionIni+1, positionFim+1);
+        adapter.troca(positionIni, positionFim);
+
         return false;
     }
+
+
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {

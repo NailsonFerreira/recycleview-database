@@ -119,11 +119,11 @@ public class ContatoDAO extends BasicDAO implements com.nailson.ceeprecycler.int
     }
 
     @Override
-    public Contato getObjectById(Contato contato) {
+    public Contato getObjectById(int id) {
         db = getReadableDatabase();
         String select = "SELECT * FROM "+ TABELA_CONTATOS +
                 " WHERE " + ID_PESSOA + " = ? ;";
-        String[] args = new String[]{String.valueOf(contato.getIdPessoa())};
+        String[] args = new String[]{String.valueOf(id)};
         Cursor c = db.rawQuery(select, args);
         Contato contatot = new Contato();
         while (c.moveToNext()){

@@ -21,5 +21,5 @@ public interface BasicDAO<T> {
 
     ContentValues getContentValues(T o);
 
-    T getObjectById(T o);
+    T getObjectById(int id);
 }

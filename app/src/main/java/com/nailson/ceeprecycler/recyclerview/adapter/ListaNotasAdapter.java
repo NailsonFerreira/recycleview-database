@@ -3,6 +3,7 @@ package com.nailson.ceeprecycler.recyclerview.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import com.nailson.ceeprecycler.dao.PessoaDAO;
 import com.nailson.ceeprecycler.model.Pessoa;
 import com.nailson.ceeprecycler.recyclerview.adapter.listener.OnItemClickListener;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class ListaNotasAdapter extends RecyclerView.Adapter <ListaNotasAdapter.NotaViewHolder>{
@@ -58,6 +61,8 @@ public class ListaNotasAdapter extends RecyclerView.Adapter <ListaNotasAdapter.N
     }
 
 
+
+
     class NotaViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView txtTitulo;
@@ -68,7 +73,12 @@ public class ListaNotasAdapter extends RecyclerView.Adapter <ListaNotasAdapter.N
             super(itemView);
             txtTitulo = itemView.findViewById(R.id.item_nota_titulo);
             txtDescricao = itemView.findViewById(R.id.item_nota_descricao);
-
+            itemView.setOnDragListener(new View.OnDragListener() {
+                @Override
+                public boolean onDrag(View view, DragEvent dragEvent) {
+                    return false;
+                }
+            });
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -82,6 +92,11 @@ public class ListaNotasAdapter extends RecyclerView.Adapter <ListaNotasAdapter.N
             txtTitulo.setText(String.format("%s - ID: %d", pessoa.getNome(), pessoa.getId()));
             txtDescricao.setText(String.valueOf(pessoa.getIdade()));
         }
+    }
+
+    public void troca(int positionIni, int positionFim) {
+        Collections.swap(pessoas, positionIni, positionFim);
+        notifyDataSetChanged();
     }
 
     public void altera(Pessoa pessoa, int posicao){

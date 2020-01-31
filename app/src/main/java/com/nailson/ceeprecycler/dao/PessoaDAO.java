@@ -131,8 +131,54 @@ public class PessoaDAO extends BasicDAO implements com.nailson.ceeprecycler.inte
         return values;
     }
 
+    public ContentValues getContentValuesComId(Pessoa pessoa) {
+        ContentValues values = new ContentValues();
+        values.put(ID, pessoa.getId());
+        values.put(NOME, pessoa.getNome());
+        values.put(IDADE, pessoa.getIdade());
+
+        return values;
+    }
+
+    public int alteraComId(Pessoa pessoa) {
+        db = getWritableDatabase();
+        ContentValues values = getContentValuesComId(pessoa);
+        String where =  ID + " = ?";
+        String[] args = new String[]{String.valueOf(pessoa.getId())};
+        int update = db.update(TABELA_PESSOAS, values, where, args);
+        Log.i(TAG, String.format("update():%s db: %s", pessoa.toString(), update));
+
+        return update;
+    }
+
+    public void troca(int inicio, int fim){
+        Pessoa pessoaInicio = getObjectById(inicio);
+        Pessoa pessoaFim = getObjectById(fim);
+
+        if(pessoaInicio!=null && pessoaFim!=null){
+            Log.i(TAG, String.format("troca(Inicio %s, Fim %s) pessoainicio: %s pessoaFim: %s",inicio, fim, pessoaInicio.toString(), pessoaFim.toString()));
+
+            pessoaInicio.setId(fim);
+            pessoaFim.setId(inicio);
+
+            altera(pessoaInicio);
+            altera(pessoaFim);
+            Log.i(TAG, String.format("troca() pessoainicio: %s pessoaFim: %s", pessoaInicio.toString(), pessoaFim.toString()));
+        }
+    }
+
     @Override
-    public Pessoa getObjectById(Pessoa o) {
+    public Pessoa getObjectById(int id) {
+        db = getReadableDatabase();
+        String existe = String.format("SELECT * FROM %s WHERE %s = ? LIMIT 1;", TABELA_PESSOAS, ID);
+
+        Cursor c = db.rawQuery(existe, new String[]{String.valueOf(id)});
+        while (c.moveToNext()){
+            Pessoa pessoa = getObjectCursor(c);
+            Log.i(TAG, String.format("getObjectById():%s", pessoa.toString()));
+            return pessoa;
+        }
+        c.close();
         return null;
     }
 }
